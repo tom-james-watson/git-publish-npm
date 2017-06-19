@@ -1,6 +1,6 @@
 {
   "name": "git-publish-npm",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Publish a Git repository to NPM",
   "main": "index.js",
   "scripts": {

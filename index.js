@@ -9,7 +9,7 @@ const argv = require('minimist')(process.argv.slice(2))
 
 if (argv.h || argv.help) {
   console.log('Usage:\n')
-  console.log('git-publish-npm <github repo> <version> [--help] [--http] [-v]')
+  console.log('git-publish-npm <github repo> <version/tag> [--help] [--http] [-v]')
   console.log('\ne.g. git-publish-npm tom-james-watson/gitpublish-npm 0.1.0')
   process.exit(0)
 }
@@ -30,11 +30,12 @@ shell.config.fatal = true
 function checkoutTag() {
   shell.cd(repoPath)
 
-  console.log('Checking out tag ' + version + '')
+  console.log('Checking out tag ' + version)
+
   try {
     shell.exec('git checkout ' + version)
   } catch(e) {
-    console.error(e)
+    console.error('Failed to checkout tag ' + version);
     process.exit(1)
   }
 
@@ -43,6 +44,21 @@ function checkoutTag() {
   if (pJson.version !== version) {
     throw 'package.json version does not match tag ' + version
   }
+}
+
+function fetchTags() {
+  shell.cd(repoPath)
+
+  process.stdout.write('Fetching latest tags...')
+
+  try {
+    shell.exec('git fetch --tags')
+  } catch(e) {
+    console.error('Failed to fetch tags');
+    process.exit(1)
+  }
+
+  process.stdout.write(' Done.\n')
 }
 
 function cloneRepo() {
@@ -56,30 +72,39 @@ function cloneRepo() {
     repoUrl = 'git@github.com:' + fullRepo + '.git'
   }
 
-  console.log('Cloning ' + repoUrl + '')
+  console.log('Cloning ' + repoUrl)
+
   try {
     shell.exec('git clone ' + repoUrl)
   } catch(e) {
-    console.error(e);
+    console.error('Failed to clone ' + repoUrl);
     process.exit(1)
   }
 }
 
 function installDependencies() {
   process.stdout.write('\nInstalling package dependencies...')
+
   try {
     shell.exec('npm install')
   } catch(e) {
     console.error(e);
     process.exit(1)
   }
+
   process.stdout.write(' Done.\n')
 }
 
 function publish() {
   console.log('\nPublishing ' + repo + '@' + version + '\n')
+
   shell.config.silent = false
-  shell.exec('npm publish')
+
+  try {
+    shell.exec('npm publish')
+  } catch(e) {
+    process.exit(1)
+  }
   console.log('\nSuccessfully published!')
 }
 
@@ -89,6 +114,7 @@ function ensureRepo() {
     cloneRepo()
     checkoutTag()
   } else {
+    fetchTags()
     checkoutTag()
   }
 }
