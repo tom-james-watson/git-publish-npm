@@ -1,0 +1,31 @@
+{
+  "name": "git-publish-npm",
+  "version": "0.1.0",
+  "description": "Publish a Git repository to NPM",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "git-publish-npm": "index.js"
+  },
+  "keywords": [
+    "git",
+    "publish",
+    "npm"
+  ],
+  "author": "Tom Watson <tom@tomjwatson.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tom-james-watson/git-publish-npm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tom-james-watson/git-publish-npm/issues"
+  },
+  "homepage": "https://github.com/tom-james-watson/git-publish-npm#readme",
+  "dependencies": {
+    "minimist": "^1.2.0",
+    "shelljs": "^0.7.8"
+  }
+}
