@@ -112,11 +112,10 @@ function ensureRepo() {
   if (!fs.existsSync(repoPath)) {
     shell.mkdir('-p', checkoutPath)
     cloneRepo()
-    checkoutTag()
   } else {
     fetchTags()
-    checkoutTag()
   }
+  checkoutTag()
 }
 
 function run() {
